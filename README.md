@@ -2,7 +2,7 @@
 
 ## Project info
 
-**URL**: 
+**URL**: https://note-cash.vercel.app/
 
 ## How can I edit this code?
 
