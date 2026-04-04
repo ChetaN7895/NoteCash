@@ -1,0 +1,7 @@
+project_id = "bjxlrwfpqbhokwcuxlff"
+
+[functions.auto-approve-note]
+verify_jwt = false
+
+[functions.public-notes-api]
+verify_jwt = false
