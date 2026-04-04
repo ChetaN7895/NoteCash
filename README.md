@@ -4,10 +4,6 @@
 
 **URL**: https://note-cash.vercel.app/
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
 DEMO Images 
 
 <img width="1894" height="860" alt="Image" src="https://github.com/user-attachments/assets/826a5708-2785-4d09-84e2-7dc4ac4c2657" />
