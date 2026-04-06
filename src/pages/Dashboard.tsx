@@ -15,6 +15,7 @@ import {
   Download,
   TrendingUp,
   Clock,
+  Pencil,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import EarningsCard from "@/components/EarningsCard";
@@ -38,6 +39,7 @@ import {
 import { useAuthStore } from "@/stores/authStore";
 import { notesService, Note } from "@/services/notes.service";
 import { format } from "date-fns";
+import EditNoteModal from "@/components/EditNoteModal";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -48,6 +50,8 @@ const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userNotes, setUserNotes] = useState<Note[]>([]);
+  const [editNote, setEditNote] = useState<Note | null>(null);
+  const [editOpen, setEditOpen] = useState(false);
   const [stats, setStats] = useState({
     totalNotes: 0,
     totalViews: 0,
@@ -96,6 +100,16 @@ const Dashboard = () => {
       isMounted = false;
     };
   }, [user?.id, navigate]);
+
+  const refreshNotes = async () => {
+    if (!user) return;
+    const [notes, userStats] = await Promise.all([
+      notesService.getUserNotes(user.id),
+      notesService.getUserStats(user.id)
+    ]);
+    setUserNotes(notes);
+    setStats(userStats);
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -295,6 +309,7 @@ const Dashboard = () => {
                             <TableHead className="text-right">Views</TableHead>
                             <TableHead className="text-right">Downloads</TableHead>
                             <TableHead className="text-right">Uploaded</TableHead>
+                            <TableHead className="w-[50px]"></TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -314,6 +329,16 @@ const Dashboard = () => {
                               </TableCell>
                               <TableCell className="text-right text-muted-foreground">
                                 {note.created_at ? format(new Date(note.created_at), 'MMM dd, yyyy') : '-'}
+                              </TableCell>
+                              <TableCell>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => { setEditNote(note); setEditOpen(true); }}
+                                  title="Edit note"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </Button>
                               </TableCell>
                             </TableRow>
                           ))}
@@ -394,6 +419,13 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+
+      <EditNoteModal
+        note={editNote}
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        onSaved={refreshNotes}
+      />
     </div>
   );
 };
